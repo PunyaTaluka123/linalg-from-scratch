@@ -1,4 +1,7 @@
 import matplotlib.pyplot as plt
+from Vector_Matrix_base import Matrix, Vector
+
+
 
 Trans_i1 = float(input("Enter coord 1 of transformed i vector: "))
 Trans_i2 = float(input("Enter coord 2 of transformed i vector: "))
@@ -7,14 +10,16 @@ Trans_j1 = float(input("Enter coord 1 of transformed j vector: "))
 Trans_j2 = float(input("Enter coord 2 of transformed j vector: "))
 
 
-i_new = [Trans_i1, Trans_i2]
-j_new = [Trans_j1, Trans_j2]
+i_new = Vector([Trans_i1, Trans_i2])
+j_new = Vector([Trans_j1, Trans_j2])
 
-def transform(xi, xj):
-    xi_new = xi * i_new[0] + xj * j_new[0]
-    xj_new = xi * i_new[1] + xj * j_new[1]
+trans_matrix = Matrix([[i_new[0], j_new[0]],
+                       [i_new[1], j_new[1]]
+                       ])
 
-    return xi_new, xj_new
+def transform(A: Matrix, vec: Vector):
+    trans = A@vec
+    return trans.components[0], trans.components[1]
 
 
 
@@ -33,13 +38,10 @@ grid_min = -5
 grid_max = 5
 
 for x in range(grid_min, grid_max + 1):
-
     x_values = []
     y_values = []
-
     for y in range(grid_min, grid_max + 1):
-
-        x_new, y_new = transform(x, y)
+        x_new, y_new = transform(trans_matrix, Vector([x, y]))
 
         x_values.append(x_new)
         y_values.append(y_new)
@@ -54,7 +56,7 @@ for y in range(grid_min, grid_max + 1):
 
     for x in range(grid_min, grid_max + 1):
 
-        x_new, y_new = transform(x, y)
+        x_new, y_new = transform(trans_matrix, Vector([x, y]))
 
         x_values.append(x_new)
         y_values.append(y_new)

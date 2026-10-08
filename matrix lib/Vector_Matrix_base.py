@@ -7,18 +7,29 @@ class Matrix:
         self.cols = len(self.components[0]) if self.rows>0 else 0
     
     def __matmul__(self, other):
-        if self.cols != other.rows:
-            raise ValueError
-        res = []
-        for i in range(self.rows):
-            r1 = []
-            for j in range(other.cols):
+        if isinstance(other, Matrix):
+            if self.cols != other.rows:
+                raise ValueError
+            res = []
+            for i in range(self.rows):
+                r1 = []
+                for j in range(other.cols):
+                    total = 0
+                    for k in range(other.rows):
+                        total = total + self.components[i][k] * other.components[k][j]
+                    r1.append(total)
+                res.append(r1)
+            return Matrix(res)
+        elif isinstance(other, Vector):
+            if self.cols != other.n:
+                raise ValueError
+            res = []
+            for i in range(self.rows):
                 total = 0
-                for k in range(other.rows):
-                    total = total + self.components[i][k] * other.components[k][j]
-                r1.append(total)
-            res.append(r1)
-        return Matrix(res)
+                for j in range(other.n):
+                    total += self.components[i][j] * other[j]
+                res.append(total)
+            return Vector(res)
 
     def transpose(self):
         res = []
@@ -65,6 +76,9 @@ class Vector:
 
     def __rmul__(self, other):
         return self*other
+
+    def __getitem__(self, index):
+        return self.components[index]
 
     def dot(self, other):
         if self.n != other.n:

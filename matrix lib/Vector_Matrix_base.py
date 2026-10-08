@@ -45,12 +45,8 @@ class Matrix:
 
     def trace(self):
         total = 0
-        count = 0
-        for rows in self.components:
-            for i in range(len(rows)):
-                if i==count:
-                    total+=rows[i]
-            count+=1
+        for i, rows in enumerate(self.components):
+            total+=rows[i]
         return total
 
 

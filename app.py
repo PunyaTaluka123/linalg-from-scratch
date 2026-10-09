@@ -10,7 +10,7 @@ sys.path.insert(
     str(Path(__file__).parent / "matrix lib")
 )
 
-from Vector_Matrix_base import Matrix, Vector
+from matrix_lib.Vector_Matrix_base import Matrix, Vector
 
 
 st.set_page_config(

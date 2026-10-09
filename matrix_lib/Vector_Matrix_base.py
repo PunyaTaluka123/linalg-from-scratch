@@ -79,15 +79,32 @@ class Matrix:
     def row_add(self, i, j, scale = 1):
         self[i] = [self[i][k]+scale * self[j][k] for k in range(self.cols)]
 
+# ok so how I wanna go about this is that I will first Check all the rows for non-zero
+# Ok so the iteration works like Ill go over outer loop 1, all 0, skip 1,1, how to check all rows before are non-zero or not?
+
 
     def ref(self):
+        piv_row = 0
+
         #Assuming no first cols are non-zero
-        for i in range(min(self.rows, self.cols)):
-            norm = self[i][i]
-            self.row_scale(i, 1/norm)
-            for j in range(i+1, self.rows):
+        for i in range(self.cols):
+            if (piv_row==min(self.rows, self.cols)):
+                break
+            if (self[piv_row][i]==0):
+                k = piv_row
+                while (k<self.rows):
+                    if (self[k][i]!=0):
+                        self.row_swap(k,piv_row)
+                        break
+                    k+=1
+                else:
+                    continue
+            norm = self[piv_row][i]
+            self.row_scale(piv_row, 1/norm)
+            for j in range(piv_row+1, self.rows):
                 scale = self[j][i]
-                self.row_add(j, i, -scale)
+                self.row_add(j, piv_row, -scale)
+            piv_row+=1
         return self
 
 

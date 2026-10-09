@@ -90,15 +90,17 @@ class Matrix:
         for i in range(self.cols):
             if (piv_row==min(self.rows, self.cols)):
                 break
-            if (self[piv_row][i]==0):
-                k = piv_row
-                while (k<self.rows):
-                    if (self[k][i]!=0):
-                        self.row_swap(k,piv_row)
-                        break
-                    k+=1
-                else:
-                    continue
+
+            k = piv_row
+            maxi = piv_row
+            while (k<self.rows):
+                if abs(self[k][i])>abs(self[maxi][i]):
+                    maxi = k                        
+                k+=1
+            self.row_swap(maxi,piv_row)
+            if (abs(self[piv_row][i]) < 1e-4):
+                continue
+
             norm = self[piv_row][i]
             self.row_scale(piv_row, 1/norm)
             for j in range(piv_row+1, self.rows):

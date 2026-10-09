@@ -5,6 +5,12 @@ class Matrix:
         self.components = list(components)
         self.rows = len(self.components)
         self.cols = len(self.components[0]) if self.rows>0 else 0
+
+    def __getitem__(self,index):
+        return self.components[index]
+
+    def __setitem__(self, index, value):
+        self.components[index] = value
     
     def __matmul__(self, other):
         if isinstance(other, Matrix):
@@ -40,12 +46,12 @@ class Matrix:
             res.append(res1)
         return Matrix(res)
 
-    def identity(self):
-        if self.rows != self.cols:
-            raise ValueError
-        n = self.rows
-        res = [[1 if i==j else 0 for j in range (n)]for i in range (n)]
-        return Matrix(res)
+    @classmethod
+    def identity(cls, num):
+        return cls([
+            [1 if i==j else 0 for j in range(num)]
+            for i in range(num)
+        ])
 
     def Fnorm(self):
         total = 0
@@ -59,6 +65,31 @@ class Matrix:
         for i, rows in enumerate(self.components):
             total+=rows[i]
         return total
+
+    def row_swap(self, i,j):
+        if not (self.rows>i and self.rows>j):
+            raise ValueError
+        self.components[i], self.components[j] = self.components[j], self.components[i]
+
+    def row_scale(self, i, scale):
+        if not (self.rows>i):
+            raise IndexError
+        self[i] = [x*scale for x in self[i]]
+
+    def row_add(self, i, j, scale = 1):
+        self[i] = [self[i][k]+scale * self[j][k] for k in range(self.cols)]
+
+
+    def ref(self):
+        #Assuming no first cols are non-zero
+        for i in range(min(self.rows, self.cols)):
+            norm = self[i][i]
+            self.row_scale(i, 1/norm)
+            for j in range(i+1, self.rows):
+                scale = self[j][i]
+                self.row_add(j, i, -scale)
+        return self
+
 
 
 class Vector:

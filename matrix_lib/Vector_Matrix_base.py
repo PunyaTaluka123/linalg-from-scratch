@@ -109,7 +109,38 @@ class Matrix:
             piv_row+=1
         return self
 
+    def rref(self):
+        piv = 0
+        piv_cols = []
 
+        for i in range(self.cols):
+            if (piv==min(self.rows, self.cols)):
+                break
+
+            k = piv
+            maxi = piv
+            while (k<self.rows):
+                if abs(self[k][i])>abs(self[maxi][i]):
+                    maxi = k                        
+                k+=1
+            self.row_swap(maxi,piv)
+            if (abs(self[piv][i]) < 1e-4):
+                continue
+
+            norm = self[piv][i]
+            self.row_scale(piv, 1/norm)
+            for j in range(piv+1, self.rows):
+                scale = self[j][i]
+                self.row_add(j, piv, -scale)
+            piv_cols.append(i)
+            piv+=1
+
+        for i in range(len(piv_cols)-1, -1, -1):
+            cols = piv_cols[i]
+            rows = i
+            for j in range(rows-1, -1, -1):
+                scale = self[j][cols]
+                self.row_add(j, rows, -scale)
 
 class Vector:
     def __init__(self, components: float):

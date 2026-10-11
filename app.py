@@ -73,34 +73,47 @@ else:
 col3.metric("Transformation", status)
 
 st.divider()
-st.header("Reduced row echleon form")
-st.markdown("Reducing matrix using a self-coded gaussian implementation")
+st.header("Reduced Row Echelon Form (RREF)")
+st.markdown(
+    "Reducing the matrix using your own Gaussian elimination implementation."
+)
 
+# Copy the matrix because rref() modifies it in place.
 R = Matrix([
-    [a,b],
-    [c,d],
+    [a, b],
+    [c, d],
 ])
 
-R.rref()          
+R.rref()
+
 
 def matrix_to_latex(M):
     rows = [
-        "&".join(f"{M[i][j]:.3f}" for j in range (M.cols))
+        " & ".join(
+            f"{M[i][j]:.3f}" for j in range(M.cols)
+        )
         for i in range(M.rows)
     ]
-    return r"\begin{bmatrix}" + r" \\ ".join(rows) + r"\end{bmatrix}"
+
+    return (
+        r"\begin{bmatrix}"
+        + r" \\ ".join(rows)
+        + r"\end{bmatrix}"
+    )
+
+
 left, right = st.columns(2)
 
 with left:
-    st.subheader("original matrix")
+    st.subheader("Original matrix")
     st.latex(r"A = " + matrix_to_latex(A))
 
 with right:
     st.subheader("RREF")
     st.latex(
-        r"\operatorname{RREF}(A) = " + matrix_to_latex(R)
+        r"\operatorname{RREF}(A) = "
+        + matrix_to_latex(R)
     )
-
 
 fig, ax = plt.subplots(figsize=(8, 8))
 samples = [-5 + i * 0.25 for i in range(41)]
